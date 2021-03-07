@@ -98,18 +98,67 @@ resource "aws_eip" "elasticip" {
   associate_with_private_ip = "10.0.102.50"
   depends_on = [aws_internet_gateway.masterc_internet_gateway]
 }
-resource "aws_lb" "testlb" {
-  name               = "test-lb-tf"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.lb_sg.id]
-  subnets            = aws_subnet.public.masterc_public_subnet.id
+resource "aws_placement_group" "test" {
+  name     = "test"
+  strategy = "cluster"
+}
+resource "aws_autoscaling_group" "masterc1" {
+  name                      = "terraform-test"
+  max_size                  = 10
+  min_size                  = 5
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 4
+  force_delete              = true
+  placement_group           = aws_placement_group.test.id
+  launch_configuration      = aws_launch_template.vmconfig.name
+  vpc_zone_identifier       = [aws_subnet.masterc_public_subnet.id, aws_subnet.masterc_private_subnet.id]
+  initial_lifecycle_hook {
+    name                 = "masterc"
+    default_result       = "CONTINUE"
+    heartbeat_timeout    = 2000
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
+    notification_metadata = <<EOF
+{
+  "mas": "masterc1"
+}
+EOF
+    notification_target_arn = "arn:aws:sqs:us-east-1:444455556666:queue1*"
+    role_arn                = "arn:aws:iam::123456789012:role/S3Access"
+  }
+  tag {
+    key                 = "foo"
+    value               = "masterc1"
+    propagate_at_launch = true
+  }
+  timeouts {
+    delete = "15m"
+  }
+  tag {
+    key                 = "lorem"
+    value               = "ipsum"
+    propagate_at_launch = false
+  }
+}
+resource "aws_launch_template" "vmconfig" {
+  name_prefix   = "masterc"
+  image_id      = "ami-0d758c1134823146a"
+  instance_type = "t2.micro"
+}
+resource "aws_autoscaling_group" "masterc1" {
+  availability_zones = ["us-east-1a"]
+  desired_capacity   = 1
+  max_size           = 2
+  min_size           = 1
+  launch_template {
+    id      = aws_launch_template.vmconfig.id
+  }
 }
 resource "aws_instance" "web-server"{
 ami = "ami-0d758c1134823146a"
 instance_type = "t2.micro"
 availablity_zone = "us-east-1a"
-instance_count = 3
+instance_count = 1
 key_name = "main-key"
 network_interface {
  device_index = 0
