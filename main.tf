@@ -1,17 +1,19 @@
 provider "aws" {
     region = "us-east-1"
+    version = "~> 0.12.6"
     access_key = "xxxxxx"
     secret_key = "xxxxxx"
 }
 
-#create AWS key pair
-#create vpc
+#create AWS key pair to access AWS profile
+#create VPC
 #create Internet gateway
 #create route table
 #create a public and private subnets
 #associate subnet with route table
-#create security group to allow port 22,80,443
-#create Ubuntu server and install apache2
+#create security group to allow port 22,80,443 
+#create Ubuntu server with latest AMI and install apache2
+#create autoscaling group and configuration
 
 resource "aws_vpc" "masterc-vpc"{
 cidr_block= "10.0.0.0/16"
@@ -36,7 +38,7 @@ cidr_block = "10.0.101.0/24"
 availablity_zone = "us-east-1a"
 tags = {
   Environment = "testing"
-  name ="apploadbalancer"
+  name ="public-subnet-for-apploadbalancer"
 }
 }
 resource "aws_subnet" "masterc_private_subnet"{
@@ -45,7 +47,7 @@ cidr_block = "10.0.1.0/24"
 availablity_zone = "us-east-1a"
 tags = {
   Environment = "testing"
-  name ="compute"
+  name ="private-subnet-for-compute-instances"
 }
 }
 resource "aws_security_group" "allow_web" {
@@ -104,7 +106,7 @@ resource "aws_lb" "testlb" {
   subnets            = aws_subnet.public.masterc_public_subnet.id
 }
 resource "aws_instance" "web-server"{
-ami = "ami-085925f297f89fce1"
+ami = "ami-0d758c1134823146a"
 instance_type = "t2.micro"
 availablity_zone = "us-east-1a"
 instance_count = 3
@@ -120,10 +122,4 @@ user_data = <<-network_interface
              sudo systemctl start apache2
              sudo bash -c 'echo your very first web server > /var/www/html/index.html'
              EOF
-tags=
 }
-
-
-Testing 
-Auto scaling
-load load_balancer extra
