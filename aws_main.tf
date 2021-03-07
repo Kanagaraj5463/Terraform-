@@ -9,10 +9,10 @@ provider "aws" {
 #create VPC
 #create Internet gateway
 #create route table
-#create a public and private subnets
+#create subnets
 #associate subnet with route table
-#create security group to allow port 22,80,443 
-#create autoscaling group and configuration
+#create security group to allow the ports 22,80,443 
+#create autoscaling group and configurations
 #create application load balancer 
 #create Ubuntu server with latest AMI and install apache2
 
