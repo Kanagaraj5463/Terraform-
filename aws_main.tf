@@ -12,8 +12,9 @@ provider "aws" {
 #create a public and private subnets
 #associate subnet with route table
 #create security group to allow port 22,80,443 
-#create Ubuntu server with latest AMI and install apache2
 #create autoscaling group and configuration
+#create application load balancer 
+#create Ubuntu server with latest AMI and install apache2
 
 resource "aws_vpc" "masterc-vpc"{
 cidr_block= "10.0.0.0/16"
@@ -152,6 +153,26 @@ resource "aws_autoscaling_group" "masterc1" {
   min_size           = 1
   launch_template {
     id      = aws_launch_template.vmconfig.id
+  }
+}
+resource "aws_lb" "applb" {
+  name               = "app"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.allow_web.id]
+  subnets            = aws_subnet.public.masterc_public_subnet.id
+  enable_deletion_protection = true
+  access_logs {
+    bucket  = aws_s3_bucket.lb_logs.bucket
+    prefix  = "test-applb"
+    enabled = true
+    subnet_mapping {
+    subnet_id     = aws_subnet.masterc_public_subnet.id
+    allocation_id = aws_eip.elasticip.id
+  }
+  }
+  tags = {
+    Environment = "testing"
   }
 }
 resource "aws_instance" "web-server"{
