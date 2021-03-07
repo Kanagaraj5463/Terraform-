@@ -1,4 +1,4 @@
-I have created the below modules in main.tf file to deploy a web application 
+I have created the below modules in main.tf file to deploy a web application with cloud auto-scaling 
 step1: Created AWS provider configuration module with key pairs to access AWS profile
 step2: Created a VPC called 'masterc-vpc' with cidr "10.0.0.0/16"
 step3: Created an Internet gateway called "masterc_internet_gateway" and attached with VPC "masterc-vpc" for enabling internet access/communication
