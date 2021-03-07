@@ -1,3 +1,7 @@
+a. terraform init
+b. terraform plan
+c terraform apply
+
 init: Initializes a new or existing Terraform configuration
 plan: Generates and shows an execution plan
 apply: Builds or changes infrastructure
