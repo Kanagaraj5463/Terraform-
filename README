@@ -1,1 +1,10 @@
-
+I have created the below modules in main.tf file to deploy a web application 
+step1: Created AWS provider configuration module with key pairs to access AWS profile
+step2: Created a VPC called 'masterc-vpc' with cidr "10.0.0.0/16"
+step3: Created an Internet gateway called "masterc_internet_gateway" and attached with VPC "masterc-vpc" for enabling internet access/communication
+step4: Created two subnetworks under 'masterc-vpc' VPC. "masterc_private_subnet" and "masterc_private_subnet"
+step5: Created security groups to allow the poerts 443,80 and 22 to allow the web traffic requests under the subnet "masterc_public_subnet'
+step6: Created an elastic IP to assign public IP address to the web server  
+step7: Created Autoscaling group "masterc1" with latest amazon machine image "0d758c1134823146a" and VM instance type as "t2.micro"
+step8: Created application load balancer under the subnet "masterc_public_subnet"
+step9: Created EOF condition file to install "apache2" pkg to start the web service in the instances  
