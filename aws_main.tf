@@ -112,7 +112,7 @@ resource "aws_autoscaling_group" "masterc1" {
   desired_capacity          = 4
   force_delete              = true
   placement_group           = aws_placement_group.test.id
-  launch_configuration      = aws_launch_template.vmconfig.name
+  launch_template           = aws_launch_template.vmconfig.name
   vpc_zone_identifier       = [aws_subnet.masterc_public_subnet.id, aws_subnet.masterc_private_subnet.id]
   initial_lifecycle_hook {
     name                 = "masterc"
@@ -145,15 +145,6 @@ resource "aws_launch_template" "vmconfig" {
   name_prefix   = "masterc"
   image_id      = "ami-0d758c1134823146a"
   instance_type = "t2.micro"
-}
-resource "aws_autoscaling_group" "masterc1" {
-  availability_zones = ["us-east-1a"]
-  desired_capacity   = 1
-  max_size           = 2
-  min_size           = 1
-  launch_template {
-    id      = aws_launch_template.vmconfig.id
-  }
 }
 resource "aws_lb" "applb" {
   name               = "app"
