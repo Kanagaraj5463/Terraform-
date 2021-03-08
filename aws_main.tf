@@ -77,7 +77,7 @@ resource "aws_eip" "elasticip"{
 }
 resource "aws_launch_template" "foobar" {
   name_prefix   = "foobar"
-  image_id      = "ami-0d758c1134823146a"
+  image_id      = "ami-042e8287309f5df03"
   instance_type = "t2.micro"
 }
 resource "aws_autoscaling_group" "bar" {
@@ -92,7 +92,7 @@ resource "aws_autoscaling_group" "bar" {
 }
 #create an EC2 instance and start the web server 
 resource "aws_instance" "webserver"{
-ami = "ami-0d758c1134823146a"
+ami = "ami-042e8287309f5df03"
 instance_type = "t2.micro"
 availability_zone = "us-east-1a"
 security_groups = [ "${aws_security_group.ser.name}" ]
