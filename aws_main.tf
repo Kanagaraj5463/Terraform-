@@ -1,7 +1,7 @@
 provider "aws" {
     region = "us-east-1"
-    access_key = "Axxxxxxxx"
-    secret_key = "xxxxxx"
+    access_key = "AKIAIQDHZMJNGFBMDNEQ"
+    secret_key = "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"
 }
 
 resource "aws_vpc" "master-vpc"{
@@ -90,7 +90,19 @@ resource "aws_autoscaling_group" "bar" {
     version = "$Latest"
   }
 }
+#create an EC2 instance and start the web server 
 resource "aws_instance" "webserver"{
 ami = "ami-0d758c1134823146a"
 instance_type = "t2.micro"
+availability_zone = "us-east-1a"
+security_groups = [ "${aws_security_group.ser.name}" ]
+key_name = "don"
+user_data = <<-EOF
+         #! /bin/bash
+         sudo yum install httpd -y
+         sudo systemctl start httpd
+         sudo systemctl enable httpd
+         echo "<h1> sample webserver </h1> >> var /var/www/html/index.html
+  EOF       
+
 }
