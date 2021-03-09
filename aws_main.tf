@@ -68,7 +68,11 @@ resource "aws_network_interface" "ni" {
   subnet_id       = aws_subnet.master-public-subnet.id
   private_ips     = ["10.0.1.24"]
   security_groups = [aws_security_group.ser.id]
+  attachment {
+    instance     = aws_instance.foobar1.id
+    device_index = 1
   }
+}
 resource "aws_eip" "elasticip"{
   vpc      = true
   network_interface ="aws_network_interface.ni.id"
