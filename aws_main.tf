@@ -3,7 +3,6 @@ provider "aws" {
     access_key = "provide the access key"
     secret_key = "provide the secret key"
 }
-
 resource "aws_vpc" "master-vpc"{
 cidr_block= "10.0.0.0/16"
 tags = {
@@ -99,7 +98,7 @@ resource "aws_instance" "foobar1"{
 ami = "ami-042e8287309f5df03"
 instance_type = "t2.micro"
 availability_zone = "us-east-1a"
-security_groups = [ "${aws_security_group.ser.name}" ]
+security_groups = [aws_security_group.ser.name]
 key_name = "don"
 user_data = <<-EOF
          #! /bin/bash
