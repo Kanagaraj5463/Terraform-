@@ -1,7 +1,7 @@
 provider "aws" {
     region = "us-east-1"
-    access_key = "xxxxx.  provide key pair.  xxxxxxxxxx"
-    secret_key = "xxxxx.  provide key pair.  xxxxxxxxxx"
+    access_key = "provide the access key"
+    secret_key = "provide the secret key"
 }
 
 resource "aws_vpc" "master-vpc"{
@@ -66,13 +66,13 @@ resource "aws_security_group" "ser" {
 }
 resource "aws_network_interface" "ni" {
   subnet_id       = aws_subnet.master-public-subnet.id
-  private_ips     = ["10.0.2.24"]
+  private_ips     = ["10.0.1.24"]
   security_groups = [aws_security_group.ser.id]
   }
 resource "aws_eip" "elasticip"{
   vpc      = true
   network_interface ="aws_network_interface.ni.id"
-  associate_with_private_ip = "10.0.2.24"
+  associate_with_private_ip = "10.0.1.24"
   depends_on = [aws_internet_gateway.mastergw]
 }
 resource "aws_launch_template" "foobar" {
@@ -82,9 +82,9 @@ resource "aws_launch_template" "foobar" {
 }
 resource "aws_autoscaling_group" "bar" {
   availability_zones = ["us-east-1a"]
-  desired_capacity   = 1
-  max_size           = 1
-  min_size           = 1
+  desired_capacity   = 3
+  max_size           = 5
+  min_size           = 2
   launch_template {
     id      = aws_launch_template.foobar.id
     version = "$Latest"
