@@ -1,7 +1,7 @@
 provider "aws" {
     region = "us-east-1"
-    access_key = "xxxxxxxxxxxxx_provide the key here xxxxxxxxxxxx"
-    secret_key = "xxxxxxxxxxxxx_provide the key here xxxxxxxxxxxx"
+    access_key = "xxxxx.  provide key pair.  xxxxxxxxxx"
+    secret_key = "xxxxx.  provide key pair.  xxxxxxxxxx"
 }
 
 resource "aws_vpc" "master-vpc"{
@@ -91,7 +91,7 @@ resource "aws_autoscaling_group" "bar" {
   }
 }
 #create an EC2 instance and start the web server 
-resource "aws_instance" "webserver"{
+resource "aws_instance" "foobar1"{
 ami = "ami-042e8287309f5df03"
 instance_type = "t2.micro"
 availability_zone = "us-east-1a"
